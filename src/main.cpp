@@ -10,7 +10,7 @@ namespace lox {
         Scanner scanner(source);
         const auto tokens = scanner.scanAndGetTokens();
         for (const auto token : tokens) {
-            std::cout << token.lexeme << std::endl;
+            std::cout << token.toString() << std::endl;
         }
     }
 
