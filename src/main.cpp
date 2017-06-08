@@ -1,13 +1,25 @@
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 
+#include "scanner/scanner.hpp"
+
 namespace lox {
-    static void runFile(const std::string& path) {
-        std::cout << "TODO: run " << path << std::endl;
+    static void run(const std::string& source) {
+        Scanner scanner(source);
+        const auto tokens = scanner.scanAndGetTokens();
+        for (const auto token : tokens) {
+            std::cout << token.lexeme << std::endl;
+        }
     }
 
-    static void run(const std::string& source) {
-        std::cout << "TODO: run " << source << std::endl;
+    static void runFile(const std::string& path) {
+        std::ifstream file(path);
+        std::ostringstream stream;
+        stream << file.rdbuf();
+        file.close();
+        run(stream.str());
     }
 
     static void runPrompt() {
