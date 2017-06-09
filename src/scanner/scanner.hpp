@@ -1,80 +1,32 @@
+#ifndef SCANNER_HPP
+#define SCANNER_HPP
+
 #include <string>
 #include <vector>
 
+#include "token.hpp"
+
 namespace lox {
-    enum class TokenType {
-        // Single-character tokens.
-        LEFT_PAREN,
-        RIGHT_PAREN,
-        LEFT_BRACE,
-        RIGHT_BRACE,
-        COMMA,
-        DOT,
-        MINUS,
-        PLUS,
-        SEMICOLON,
-        SLASH,
-        STAR,
-
-        // One or two character tokens.
-        BANG,
-        BANG_EQUAL,
-        EQUAL,
-        EQUAL_EQUAL,
-        GREATER,
-        GREATER_EQUAL,
-        LESS,
-        LESS_EQUAL,
-
-        // Literals.
-        IDENTIFIER,
-        STRING,
-        NUMBER,
-
-        // Keywords.
-        AND,
-        CLASS,
-        ELSE,
-        FALSE,
-        FUN,
-        FOR,
-        IF,
-        NIL,
-        OR,
-        PRINT,
-        RETURN,
-        SUPER,
-        THIS,
-        TRUE,
-        VAR,
-        WHILE,
-
-        END_OF_FILE
-    };
-
-    class Token {
-      public:
-        Token(TokenType aType, const std::string& aLexeme, int aLine);
-        std::string toString() const;
-
-      private:
-        TokenType type;
-        std::string lexeme;
-        int line;
-    };
-
     class Scanner {
       public:
         Scanner(const std::string& aSource);
         std::vector<Token> scanAndGetTokens();
 
       private:
+        /// @brief advance and get current char
+        char advanceAndGetChar();
         ///@brief scans and adds tokens
-        void processToken();
+        void scanAndAddToken();
         /// @brief adds token to tokens list
-        void addToken();
+        void addToken(TokenType);
         /// @brief scans the entire source and calls processToken on each
-        bool isAtEnd();
+        bool isAtEnd() const;
+        /// @brief Returns true iff the given char matches the current char.
+        ///        Also advances current if there is a match.
+        bool matchAndAdvance(char);
+        /// @brief Like advance but doesn't consume character - basically
+        /// "looksahead"
+        char peek() const;
         /// @brief index in source string to first character in current lexeme
         size_t start;
         /// @brief index in source string to the current lexeme
@@ -87,3 +39,5 @@ namespace lox {
         std::vector<Token> tokens;
     };
 }
+
+#endif //SCANNER_HPP
