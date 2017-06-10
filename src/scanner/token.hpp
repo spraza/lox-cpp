@@ -34,7 +34,8 @@ namespace lox {
         STRING,
         NUMBER,
 
-        // Keywords.
+        // Reserved Keywords.
+        // Reserved keywords ARE identifiers but have seperate token types
         AND,
         CLASS,
         ELSE,

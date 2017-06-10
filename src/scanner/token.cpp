@@ -10,8 +10,8 @@ Token::Token(const TokenType aType, const std::string& aLexeme,
     , line(aLine) {}
 
 std::string Token::toString() const {
-    // for literals, use actual value
-    if (type == TokenType::IDENTIFIER || type == TokenType::STRING ||
+    // for string and number literals, use actual value
+    if (type == TokenType::STRING ||
         type == TokenType::NUMBER) {
         return literal;
     }

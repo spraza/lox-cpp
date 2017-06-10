@@ -2,6 +2,7 @@
 #define SCANNER_HPP
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "token.hpp"
@@ -35,9 +36,12 @@ namespace lox {
         /// "looksahead"
         char peek() const;
         char peekNext() const;
+        bool isDigit(char) const;
+        bool isAlpha(char) const;
+        bool isAlphaNumeric(char) const;
         void string();
         void number();
-        bool isDigit(char);
+        void identifier();
 
         /// @brief index in source string to first character in current lexeme
         size_t start;
@@ -51,6 +55,8 @@ namespace lox {
         std::vector<Token> tokens;
         /// @brief error handler for adding errors when found
         ErrorHandler& errorHandler;
+        /// @brief map of reserved keywords e.g. and, or, for, else, nil etc.
+        std::unordered_map<std::string, TokenType> reservedKeywords;
     };
 }
 

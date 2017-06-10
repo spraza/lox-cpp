@@ -8,7 +8,25 @@ Scanner::Scanner(const std::string& aSource, ErrorHandler& aErrorHandler)
     , current(0)
     , line(1)
     , source(aSource)
-    , errorHandler(aErrorHandler) {}
+    , errorHandler(aErrorHandler) {
+    // initialize reserved keywords map
+    reservedKeywords["and"]    = TokenType::AND;
+    reservedKeywords["class"]  = TokenType::CLASS;
+    reservedKeywords["else"]   = TokenType::ELSE;
+    reservedKeywords["false"]  = TokenType::FALSE;
+    reservedKeywords["for"]    = TokenType::FOR;
+    reservedKeywords["fun"]    = TokenType::FUN;
+    reservedKeywords["if"]     = TokenType::IF;
+    reservedKeywords["nil"]    = TokenType::NIL;
+    reservedKeywords["or"]     = TokenType::OR;
+    reservedKeywords["print"]  = TokenType::PRINT;
+    reservedKeywords["return"] = TokenType::RETURN;
+    reservedKeywords["super"]  = TokenType::SUPER;
+    reservedKeywords["this"]   = TokenType::THIS;
+    reservedKeywords["true"]   = TokenType::TRUE;
+    reservedKeywords["var"]    = TokenType::VAR;
+    reservedKeywords["while"]  = TokenType::WHILE;
+}
 
 char Scanner::advanceAndGetChar() {
     ++current;
@@ -87,6 +105,8 @@ void Scanner::scanAndAddToken() {
         default: {
             if (isDigit(c)) {
                 number();
+            } else if (isAlpha(c)) {
+                identifier();
             } else {
                 std::string errorMessage = "Unexpected character: ";
                 errorMessage += c;
@@ -97,7 +117,32 @@ void Scanner::scanAndAddToken() {
     }
 }
 
-bool Scanner::isDigit(const char c) { return c >= '0' && c <= '9'; }
+bool Scanner::isAlpha(const char c) const {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
+bool Scanner::isAlphaNumeric(const char c) const {
+    return isAlpha(c) || isDigit(c);
+}
+
+void Scanner::identifier() {
+    // using "maximal munch"
+    // e.g. match "orchid" not "or" keyword and "chid"
+    while (isAlphaNumeric(peek()))
+        (void)advanceAndGetChar();
+    // see if the identifier is a reserved keyword
+    const size_t identifierLength = current - start;
+    const std::string identifier  = source.substr(start, identifierLength);
+    const bool isReservedKeyword =
+        reservedKeywords.find(identifier) != reservedKeywords.end();
+    if (isReservedKeyword) {
+        addToken(reservedKeywords[identifier]);
+    } else {
+        addToken(TokenType::IDENTIFIER);
+    }
+}
+
+bool Scanner::isDigit(const char c) const { return c >= '0' && c <= '9'; }
 
 void Scanner::number() {
     while (isDigit(peek()))
@@ -109,7 +154,7 @@ void Scanner::number() {
         while (isDigit(peek()))
             (void)advanceAndGetChar();
     }
-    const size_t numberLength = current - start;
+    const size_t numberLength       = current - start;
     const std::string numberLiteral = source.substr(start, numberLength);
     addToken(TokenType::NUMBER, numberLiteral);
 }
@@ -135,7 +180,7 @@ void Scanner::string() {
 
 void Scanner::addToken(const TokenType aTokenType, const std::string& value) {
     const size_t lexemeSize = current - start;
-    const auto lexeme = source.substr(start, lexemeSize);
+    const auto lexeme       = source.substr(start, lexemeSize);
     tokens.push_back(Token(aTokenType, lexeme, value, line));
 }
 
