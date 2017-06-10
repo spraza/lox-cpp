@@ -29,7 +29,8 @@ namespace lox {
         LESS_EQUAL,
 
         // Literals.
-        IDENTIFIER,
+        IDENTIFIER, // user-defined (e.g. variable/type name) or
+                    // language-defined (reserved keyword)
         STRING,
         NUMBER,
 
@@ -56,14 +57,21 @@ namespace lox {
 
     class Token {
       public:
-        Token(TokenType aType, const std::string& aLexeme, int aLine);
+        Token(TokenType aType, const std::string& aLexeme,
+              const std::string& aLiteral, int aLine);
         std::string toString() const;
 
       private:
         TokenType type;
         std::string lexeme;
+        // @brief literal can be of 3 types: string, number, or identifier
+        // number literals are tricky and it may seem odd that i'm storing them
+        // in a string here, but having a "polymorphic" type for literal is more
+        // work which is why i'm using a string for now and will convert to
+        // number if needed.
+        std::string literal;
         int line;
     };
 }
 
-#endif //TOKEN_HPP
+#endif // TOKEN_HPP
