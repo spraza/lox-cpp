@@ -102,7 +102,7 @@ class ASTGenerator {
         file << "void accept(" << baseName + "Visitor* visitor) override {"
              << std::endl;
         file << "visitor->visit" << className << "(this);" << std::endl;
-	file << "}" << std::endl;
+        file << "}" << std::endl;
         file << "private: " << std::endl;
         for (auto field : fieldList) {
             auto fieldType = so_utils::split(field, " ")[0];
