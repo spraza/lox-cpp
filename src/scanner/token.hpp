@@ -61,9 +61,6 @@ namespace lox {
         Token(TokenType aType, const std::string& aLexeme,
               const std::string& aLiteral, int aLine);
         std::string toString() const;
-
-      private:
-        TokenType type;
         std::string lexeme;
         // @brief literal can be of 3 types: string, number, or identifier
         // number literals are tricky and it may seem odd that i'm storing them
@@ -71,6 +68,9 @@ namespace lox {
         // work which is why i'm using a string for now and will convert to
         // number if needed.
         std::string literal;
+      
+      private:
+        TokenType type;
         int line;
     };
 }

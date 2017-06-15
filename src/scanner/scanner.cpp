@@ -1,5 +1,4 @@
 #include "scanner.hpp"
-#include "../Expr.hpp"
 #include "../error_handler/error_handler.hpp"
 
 using namespace lox;

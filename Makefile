@@ -23,6 +23,7 @@ $(BUILD_DIR)/error_handler.o: $(SRC_DIR)/error_handler/error_handler.cpp
 pre_setup:
 	mkdir -p $(BUILD_DIR)
 	$(CC) -std=c++14 $(SRC_DIR)/tools/ast_generator.cpp -o $(BUILD_DIR)/ast_generator
+	$(CC) -std=c++14 $(SRC_DIR)/tools/ast_printer.cpp -o $(BUILD_DIR)/ast_printer
 	./$(BUILD_DIR)/ast_generator $(SRC_DIR)
 clean:
 	rm -rf $(BUILD_DIR)

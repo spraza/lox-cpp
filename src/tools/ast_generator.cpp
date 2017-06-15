@@ -46,7 +46,13 @@ class ASTGenerator {
         // Expr base abstract interface
         file << "#include \"scanner/token.hpp\"" << std::endl;
         file << "using namespace lox;" << std::endl;
-        file << "class " << baseName << "; // forward declare" << std::endl;
+
+	// forward declarations
+	file << "class " << baseName << "; // forward declare" << std::endl;
+        for (auto type : astSpec.second) {
+            auto className = type.substr(0, type.find(":"));
+	    file << "class " << className << "; // forward declare" << std::endl;
+        }	
 
         defineVisitor(file, baseName);
 
@@ -103,7 +109,7 @@ class ASTGenerator {
              << std::endl;
         file << "visitor->visit" << className << "(this);" << std::endl;
         file << "}" << std::endl;
-        file << "private: " << std::endl;
+        file << "public: " << std::endl;
         for (auto field : fieldList) {
             auto fieldType = so_utils::split(field, " ")[0];
             auto fieldName = so_utils::split(field, " ")[1];
@@ -123,7 +129,7 @@ class ASTGenerator {
         for (auto type : astSpec.second) {
             auto className = type.substr(0, type.find(":"));
             file << "virtual void "
-                 << "visit" + className << "(" << baseName << "* " << baseName
+                 << "visit" + className << "(" << className << "* " << baseName
                  << ") = 0;" << std::endl;
         }
         file << "};" << std::endl;
@@ -144,7 +150,7 @@ int main(int argc, char** argv) {
         const ASTGenerator::ASTSpecification astSpec = {
             "Expr",
             {"BinaryExpr   :Expr left,Token Operator,Expr right",
-             "GroupingExpr :Expr expression", "Literal  :std::string value",
+             "GroupingExpr :Expr expression", "LiteralExpr  :std::string value",
              "UnaryExpr    :Token Operator,Expr right"}};
         ASTGenerator astGenerator(outDir, astSpec);
         astGenerator.generate();
