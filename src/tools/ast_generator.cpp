@@ -36,7 +36,7 @@ class ASTGenerator {
     }
     void defineAST() {
         auto baseName = astSpec.first;
-        auto path     = outDir + "/" + baseName + ".cpp";
+        auto path     = outDir + "/" + baseName + ".hpp";
         std::ofstream file(path);
         if (!file.is_open()) {
             std::cout << "Unable to open file." << std::endl;
@@ -44,13 +44,19 @@ class ASTGenerator {
         }
 
         // Expr base abstract interface
-        file << "#include \"../scanner/token.hpp\"" << std::endl;
+        file << "#include \"scanner/token.hpp\"" << std::endl;
         file << "using namespace lox;" << std::endl;
-        file << "class Expr {" << std::endl;
+        file << "class " << baseName << "; // forward declare" << std::endl;
+
+        defineVisitor(file, baseName);
+
+        file << "class " << baseName << " {" << std::endl;
         file << "public:" << std::endl;
-        file << "  virtual ~Expr() = 0;" << std::endl;
+        file << "virtual ~" << baseName << "() = 0;" << std::endl;
+        file << "virtual void accept(" << baseName + "Visitor* visitor) = 0;"
+             << std::endl;
         file << "};" << std::endl;
-        file << "Expr::~Expr() {}" << std::endl;
+        file << baseName << "::~" << baseName << "() {}" << std::endl;
 
         // Derived concrete classes
         for (auto type : astSpec.second) {
@@ -93,6 +99,10 @@ class ASTGenerator {
             file << fieldName + "(" + fieldName + ")";
         }
         file << " {}" << std::endl;
+        file << "void accept(" << baseName + "Visitor* visitor) override {"
+             << std::endl;
+        file << "visitor->visit" << className << "(this);" << std::endl;
+	file << "}" << std::endl;
         file << "private: " << std::endl;
         for (auto field : fieldList) {
             auto fieldType = so_utils::split(field, " ")[0];
@@ -105,9 +115,24 @@ class ASTGenerator {
         }
         file << "};" << std::endl;
     }
+    void defineVisitor(std::ofstream& file, const std::string& baseName) {
+        auto visitorClassName = baseName + "Visitor";
+        file << "class " << visitorClassName << " {" << std::endl;
+        file << "public:" << std::endl;
+        file << "virtual ~" << visitorClassName << "() = 0;" << std::endl;
+        for (auto type : astSpec.second) {
+            auto className = type.substr(0, type.find(":"));
+            file << "virtual void "
+                 << "visit" + className << "(" << baseName << "* " << baseName
+                 << ") = 0;" << std::endl;
+        }
+        file << "};" << std::endl;
+        file << visitorClassName << "::~" << visitorClassName << "() {}"
+             << std::endl;
+    }
 
   private:
-    std::string outDir;
+    const std::string outDir;
     const ASTSpecification astSpec;
 };
 
