@@ -1,5 +1,7 @@
 #include "../Expr.hpp"
+#include "../scanner/token.hpp"
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -16,7 +18,7 @@ class ASTPrinter : public ExprVisitor {
     }
     void visitLiteralExpr(LiteralExpr* expr) override {
         if (expr->value.empty())
-            return "nil";
+            std::cout << "nil";
         std::cout << expr->value;
     }
     void visitUnaryExpr(UnaryExpr* expr) override {
@@ -25,11 +27,23 @@ class ASTPrinter : public ExprVisitor {
     void parenthesize(std::string name, std::vector<Expr*> exprs) {
         std::string pp = "(" + name;
         for (auto expr : exprs) {
-            pp += " ";
-            pp += expr->accept(this);
+            pp += std::string(" ");
+            expr->accept(this);
         }
         pp += ")";
         // print
-        std::cout << pp << std::endl;
+        std::cout << pp;
     }
 };
+
+int main() {
+    std::unique_ptr<Expr> rootExpr(
+        new BinaryExpr(new UnaryExpr(*new Token(TokenType::MINUS, "-", "", 1),
+                                     new LiteralExpr("123")),
+                       *new Token(TokenType::STAR, "*", "", 1),
+                       new GroupingExpr(new LiteralExpr("45.67"))));
+    ASTPrinter pp;
+    pp.print(rootExpr.get());
+    std::cout << std::endl;
+    return 0;
+}
