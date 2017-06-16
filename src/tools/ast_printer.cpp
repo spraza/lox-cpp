@@ -25,14 +25,13 @@ class ASTPrinter : public ExprVisitor {
         return parenthesize(expr->Operator.lexeme, {expr->right});
     }
     void parenthesize(std::string name, std::vector<Expr*> exprs) {
-        std::string pp = "(" + name;
-        for (auto expr : exprs) {
-            pp += std::string(" ");
-            expr->accept(this);
-        }
-        pp += ")";
+        std::string pp = "(" + name + " ";
         // print
         std::cout << pp;
+        for (auto expr : exprs) {
+            expr->accept(this);
+        }
+	std::cout << ") ";
     }
 };
 
