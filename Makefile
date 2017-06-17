@@ -5,7 +5,7 @@ BUILD_DIR := build
 
 all: pre_setup $(BUILD_DIR)/lox
 
-$(BUILD_DIR)/lox: $(BUILD_DIR)/main.o $(BUILD_DIR)/scanner.o $(BUILD_DIR)/token.o $(BUILD_DIR)/error_handler.o
+$(BUILD_DIR)/lox: $(BUILD_DIR)/main.o $(BUILD_DIR)/scanner.o $(BUILD_DIR)/token.o $(BUILD_DIR)/error_handler.o $(BUILD_DIR)/parser.o
 	$(CC) $^ -o $@
 
 $(BUILD_DIR)/main.o: $(SRC_DIR)/main.cpp
@@ -18,6 +18,9 @@ $(BUILD_DIR)/token.o: $(SRC_DIR)/scanner/token.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/error_handler.o: $(SRC_DIR)/error_handler/error_handler.cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/parser.o: $(SRC_DIR)/parser/parser.cpp $(BUILD_DIR)/token.o
 	$(CC) $(CFLAGS) $< -o $@
 
 pre_setup:
