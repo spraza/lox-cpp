@@ -68,9 +68,9 @@ namespace lox {
         // work which is why i'm using a string for now and will convert to
         // number if needed.
         std::string literal;
-      
-      private:
         TokenType type;
+
+      private:
         int line;
     };
 }
