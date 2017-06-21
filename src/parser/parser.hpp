@@ -3,9 +3,16 @@
 
 #include "../Expr.hpp"
 #include "../scanner/token.hpp"
+#include <stdexcept>
 #include <vector>
 
 namespace lox {
+    class ParseError : public std::runtime_error {
+      public:
+        ParseError(std::string msg, Token token);
+      Token token_;
+    };
+
     class Parser {
       public:
         Parser(const std::vector<Token>& tokens);
@@ -17,6 +24,8 @@ namespace lox {
         Expr* factor();
         Expr* unary();
         Expr* primary();
+      Expr* parse();
+        ParseError error(Token token, std::string message);
 
       private:
         bool match(const std::vector<TokenType>& types);

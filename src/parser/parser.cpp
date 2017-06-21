@@ -3,6 +3,10 @@
 
 using namespace lox;
 
+ParseError::ParseError(std::string msg, Token token)
+    : std::runtime_error(msg)
+    , token_(token) {}
+
 Parser::Parser(const std::vector<Token>& tokens)
     : current(0)
     , tokens_(tokens) {}
@@ -75,13 +79,28 @@ Expr* Parser::primary() {
         consume(TokenType::RIGHT_PAREN, "Exppect ')' after expression.");
         return new GroupingExpr(expr);
     }
+    throw error(peek(), "Expect expression.");
     return nullptr;
 }
 
+Expr* Parser::parse() {
+    try {
+        return expression();
+    } catch (ParseError error) {
+        return nullptr;
+    }
+}
 Token Parser::consume(TokenType type, std::string message) {
-    if (false /*check(type)*/)
+    if (check(type))
         return advance();
-    throw "dummy";//error(peek(), message);
+    throw error(peek(), message);
+}
+
+ParseError Parser::error(Token token, std::string message) {
+    if (token.type == TokenType::END_OF_FILE) {
+    } else {
+    }
+    return *new ParseError(message, token);
 }
 
 bool Parser::match(const std::vector<TokenType>& types) {
