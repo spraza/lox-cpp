@@ -6,6 +6,7 @@
 #include "error_handler/error_handler.hpp"
 #include "parser/parser.hpp"
 #include "scanner/scanner.hpp"
+#include "tools/ast_printer.hpp"
 
 namespace lox {
     static void run(const std::string& source, ErrorHandler& errorHandler) {
@@ -19,12 +20,16 @@ namespace lox {
         }
         /// parser
         Parser parser(tokens, errorHandler);
-	Expr* expression = parser.parse();
+	auto expr = parser.parse();
 	// if found error during parsing, report
         if (errorHandler.foundError) {
             errorHandler.report();
             return;
         }
+	/// print ast
+	ASTPrinter pp;
+	pp.print(expr);
+	std::cout << std::endl;
     }
 
     static void runFile(const std::string& path, ErrorHandler& errorHandler) {

@@ -3,6 +3,7 @@
 
 #include "../Expr.hpp"
 #include "../scanner/token.hpp"
+#include <memory>
 #include <stdexcept>
 #include <vector>
 

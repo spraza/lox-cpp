@@ -21,19 +21,19 @@ namespace lox {
         void visitLiteralExpr(LiteralExpr* expr) override {
             if (expr->value.empty())
                 std::cout << "nil";
-            std::cout << expr->value;
+            std::cout << " " << expr->value;
         }
         void visitUnaryExpr(UnaryExpr* expr) override {
             return parenthesize(expr->Operator.lexeme, {expr->right});
         }
         void parenthesize(std::string name, std::vector<Expr*> exprs) {
-            std::string pp = "(" + name + " ";
+            std::string pp = "(" + name;
             // print
             std::cout << pp;
             for (auto expr : exprs) {
                 expr->accept(this);
             }
-            std::cout << ") ";
+            std::cout << ")";
         }
     };
 }

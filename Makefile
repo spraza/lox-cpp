@@ -27,9 +27,6 @@ pre_setup:
 	mkdir -p $(BUILD_DIR)
 	$(CC) -std=c++14 $(SRC_DIR)/tools/ast_generator.cpp -o $(BUILD_DIR)/ast_generator
 	./$(BUILD_DIR)/ast_generator $(SRC_DIR)
-	$(CC) $(CFLAGS) $(SRC_DIR)/tools/ast_printer.cpp -o $(BUILD_DIR)/ast_printer.o
-	$(CC) $(CFLAGS) $(SRC_DIR)/scanner/token.cpp -o $(BUILD_DIR)/token.o
-	$(CC) $(BUILD_DIR)/ast_printer.o $(BUILD_DIR)/token.o -o $(BUILD_DIR)/ast_printer
 
 clean:
 	rm -rf $(BUILD_DIR)
