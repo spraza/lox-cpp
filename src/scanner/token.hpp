@@ -69,8 +69,6 @@ namespace lox {
         // number if needed.
         std::string literal;
         TokenType type;
-
-      private:
         int line;
     };
 }

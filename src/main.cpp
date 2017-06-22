@@ -4,19 +4,26 @@
 #include <string>
 
 #include "error_handler/error_handler.hpp"
+#include "parser/parser.hpp"
 #include "scanner/scanner.hpp"
 
 namespace lox {
     static void run(const std::string& source, ErrorHandler& errorHandler) {
+        /// scanner
         Scanner scanner(source, errorHandler);
         const auto tokens = scanner.scanAndGetTokens();
-        // just print all the tokens for now
-        for (const auto token : tokens) {
-            std::cout << token.toString() << std::endl;
-        }
         // if found error during scanning, report
         if (errorHandler.foundError) {
             errorHandler.report();
+            return;
+        }
+        /// parser
+        Parser parser(tokens, errorHandler);
+	Expr* expression = parser.parse();
+	// if found error during parsing, report
+        if (errorHandler.foundError) {
+            errorHandler.report();
+            return;
         }
     }
 

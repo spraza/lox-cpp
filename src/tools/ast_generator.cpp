@@ -43,26 +43,30 @@ class ASTGenerator {
             return;
         }
 
+        /// #ifndef guard
+        file << "#ifndef " + baseName + "_HPP" << std::endl;
+        file << "#define " + baseName + "_HPP" << std::endl;
+
         // Expr base abstract interface
         file << "#include \"scanner/token.hpp\"" << std::endl;
         file << "using namespace lox;" << std::endl;
 
-	// forward declarations
-	file << "class " << baseName << "; // forward declare" << std::endl;
+        // forward declarations
+        file << "class " << baseName << "; // forward declare" << std::endl;
         for (auto type : astSpec.second) {
             auto className = type.substr(0, type.find(":"));
-	    file << "class " << className << "; // forward declare" << std::endl;
-        }	
+            file << "class " << className << "; // forward declare"
+                 << std::endl;
+        }
 
         defineVisitor(file, baseName);
 
         file << "class " << baseName << " {" << std::endl;
         file << "public:" << std::endl;
-        file << "virtual ~" << baseName << "() = 0;" << std::endl;
+        file << "virtual ~" << baseName << "() {}" << std::endl;
         file << "virtual void accept(" << baseName + "Visitor* visitor) = 0;"
              << std::endl;
         file << "};" << std::endl;
-        file << baseName << "::~" << baseName << "() {}" << std::endl;
 
         // Derived concrete classes
         for (auto type : astSpec.second) {
@@ -70,6 +74,9 @@ class ASTGenerator {
             auto fields    = type.substr(type.find(":") + 1, type.size());
             defineType(file, baseName, className, fields);
         }
+
+        /// #endif for #ifndef
+        file << "#endif" << std::endl;
 
         file.close();
     }
@@ -125,7 +132,7 @@ class ASTGenerator {
         auto visitorClassName = baseName + "Visitor";
         file << "class " << visitorClassName << " {" << std::endl;
         file << "public:" << std::endl;
-        file << "virtual ~" << visitorClassName << "() = 0;" << std::endl;
+        file << "virtual ~" << visitorClassName << "() {}" << std::endl;
         for (auto type : astSpec.second) {
             auto className = type.substr(0, type.find(":"));
             file << "virtual void "
@@ -133,8 +140,6 @@ class ASTGenerator {
                  << ") = 0;" << std::endl;
         }
         file << "};" << std::endl;
-        file << visitorClassName << "::~" << visitorClassName << "() {}"
-             << std::endl;
     }
 
   private:

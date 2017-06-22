@@ -7,15 +7,18 @@
 #include <vector>
 
 namespace lox {
+    // forward declarations
+    class ErrorHandler;
+
     class ParseError : public std::runtime_error {
       public:
         ParseError(std::string msg, Token token);
-      Token token_;
+        Token token_;
     };
 
     class Parser {
       public:
-        Parser(const std::vector<Token>& tokens);
+        Parser(const std::vector<Token>& tokens, ErrorHandler& errorHandler);
         size_t current;
         Expr* expression();
         Expr* equality();
@@ -24,7 +27,7 @@ namespace lox {
         Expr* factor();
         Expr* unary();
         Expr* primary();
-      Expr* parse();
+        Expr* parse();
         ParseError error(Token token, std::string message);
 
       private:
@@ -35,6 +38,7 @@ namespace lox {
         bool isAtEnd();
         bool check(TokenType type);
         Token consume(TokenType type, std::string message);
+        ErrorHandler& errorHandler_;
         std::vector<Token> tokens_;
     };
 }

@@ -1,4 +1,5 @@
 #include "parser.hpp"
+#include "../error_handler/error_handler.hpp"
 #include <vector>
 
 using namespace lox;
@@ -7,9 +8,10 @@ ParseError::ParseError(std::string msg, Token token)
     : std::runtime_error(msg)
     , token_(token) {}
 
-Parser::Parser(const std::vector<Token>& tokens)
+Parser::Parser(const std::vector<Token>& tokens, ErrorHandler& errorHandler)
     : current(0)
-    , tokens_(tokens) {}
+    , tokens_(tokens)
+    , errorHandler_(errorHandler) {}
 
 Expr* Parser::expression() {
     return equality();
@@ -98,8 +100,11 @@ Token Parser::consume(TokenType type, std::string message) {
 
 ParseError Parser::error(Token token, std::string message) {
     if (token.type == TokenType::END_OF_FILE) {
+        errorHandler_.add(token.line, " at end", message);
     } else {
+        errorHandler_.add(token.line, "at '" + token.lexeme + "'", message);
     }
+    errorHandler_.report();
     return *new ParseError(message, token);
 }
 
