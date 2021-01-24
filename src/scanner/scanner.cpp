@@ -142,7 +142,9 @@ void Scanner::identifier() {
     }
 }
 
-bool Scanner::isDigit(const char c) const { return c >= '0' && c <= '9'; }
+bool Scanner::isDigit(const char c) const {
+    return c >= '0' && c <= '9';
+}
 
 void Scanner::number() {
     while (isDigit(peek()))
@@ -184,9 +186,13 @@ void Scanner::addToken(const TokenType aTokenType, const std::string& value) {
     tokens.push_back(Token(aTokenType, lexeme, value, line));
 }
 
-void Scanner::addToken(const TokenType aTokenType) { addToken(aTokenType, ""); }
+void Scanner::addToken(const TokenType aTokenType) {
+    addToken(aTokenType, "");
+}
 
-bool Scanner::isAtEnd() const { return current >= source.size(); }
+bool Scanner::isAtEnd() const {
+    return current >= source.size();
+}
 
 bool Scanner::matchAndAdvance(const char aExpected) {
     if (isAtEnd())

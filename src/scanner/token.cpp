@@ -11,8 +11,7 @@ Token::Token(const TokenType aType, const std::string& aLexeme,
 
 std::string Token::toString() const {
     // for string and number literals, use actual value
-    if (type == TokenType::STRING ||
-        type == TokenType::NUMBER) {
+    if (type == TokenType::STRING || type == TokenType::NUMBER) {
         return literal;
     }
 

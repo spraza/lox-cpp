@@ -71,6 +71,6 @@ namespace lox {
         TokenType type;
         int line;
     };
-}
+} // namespace lox
 
 #endif // TOKEN_HPP

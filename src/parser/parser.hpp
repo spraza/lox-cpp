@@ -42,6 +42,6 @@ namespace lox {
         ErrorHandler& errorHandler_;
         std::vector<Token> tokens_;
     };
-}
+} // namespace lox
 
 #endif // PARSER_HPP

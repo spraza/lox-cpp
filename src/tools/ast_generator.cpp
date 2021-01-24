@@ -14,7 +14,7 @@ namespace so_utils {
         do {
             pos = str.find(delim, prev);
             if (pos == std::string::npos)
-                pos    = str.length();
+                pos = str.length();
             auto token = str.substr(prev, pos - prev);
             if (!token.empty())
                 tokens.push_back(token);
@@ -22,7 +22,7 @@ namespace so_utils {
         } while (pos < str.length() && prev < str.length());
         return tokens;
     }
-}
+} // namespace so_utils
 
 class ASTGenerator {
   public:
@@ -92,7 +92,7 @@ class ASTGenerator {
             if (!first)
                 file << ", ";
             if (first)
-                first      = false;
+                first = false;
             auto fieldType = so_utils::split(field, " ")[0];
             auto fieldName = so_utils::split(field, " ")[1];
             if (!fieldType.compare(baseName)) {
@@ -107,7 +107,7 @@ class ASTGenerator {
             if (!first)
                 file << ", ";
             if (first)
-                first      = false;
+                first = false;
             auto fieldName = so_utils::split(field, " ")[1];
             file << fieldName + "(" + fieldName + ")";
         }

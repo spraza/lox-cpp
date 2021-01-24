@@ -58,6 +58,6 @@ namespace lox {
         /// @brief map of reserved keywords e.g. and, or, for, else, nil etc.
         std::unordered_map<std::string, TokenType> reservedKeywords;
     };
-}
+} // namespace lox
 
 #endif // SCANNER_HPP

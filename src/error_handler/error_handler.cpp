@@ -21,4 +21,6 @@ void ErrorHandler::add(int line, const std::string& where,
     foundError = true;
 }
 
-void ErrorHandler::clear() { errorList.clear(); }
+void ErrorHandler::clear() {
+    errorList.clear();
+}

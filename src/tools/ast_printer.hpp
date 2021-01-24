@@ -36,7 +36,7 @@ namespace lox {
             std::cout << ")";
         }
     };
-}
+} // namespace lox
 
 /// EXAMPLE USE:
 // int main() {

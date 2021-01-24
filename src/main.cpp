@@ -20,16 +20,16 @@ namespace lox {
         }
         /// parser
         Parser parser(tokens, errorHandler);
-	auto expr = parser.parse();
-	// if found error during parsing, report
+        auto expr = parser.parse();
+        // if found error during parsing, report
         if (errorHandler.foundError) {
             errorHandler.report();
             return;
         }
-	/// print ast
-	ASTPrinter pp;
-	pp.print(expr);
-	std::cout << std::endl;
+        /// print ast
+        ASTPrinter pp;
+        pp.print(expr);
+        std::cout << std::endl;
     }
 
     static void runFile(const std::string& path, ErrorHandler& errorHandler) {
@@ -51,7 +51,7 @@ namespace lox {
             }
         }
     }
-}
+} // namespace lox
 
 int main(int argc, char** argv) {
     lox::ErrorHandler errorHandler;

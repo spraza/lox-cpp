@@ -22,6 +22,6 @@ namespace lox {
       private:
         std::vector<ErrorInfo> errorList;
     };
-}
+} // namespace lox
 
 #endif // ERROR_HANDLER_HPP
