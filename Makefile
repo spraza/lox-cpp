@@ -3,7 +3,7 @@ CFLAGS := -c -g -Werror -std=c++14
 SRC_DIR := src
 BUILD_DIR := build
 
-all: pre_setup $(BUILD_DIR)/lox
+all: pre_setup format $(BUILD_DIR)/lox
 
 $(BUILD_DIR)/lox: $(BUILD_DIR)/main.o $(BUILD_DIR)/scanner.o $(BUILD_DIR)/token.o $(BUILD_DIR)/error_handler.o $(BUILD_DIR)/parser.o
 	$(CC) $^ -o $@
@@ -22,6 +22,9 @@ $(BUILD_DIR)/error_handler.o: $(SRC_DIR)/error_handler/error_handler.cpp
 
 $(BUILD_DIR)/parser.o: $(SRC_DIR)/parser/parser.cpp $(BUILD_DIR)/token.o
 	$(CC) $(CFLAGS) $< -o $@
+
+format:
+	find . -type f -name "*.?pp" | xargs clang-format -i
 
 pre_setup:
 	mkdir -p $(BUILD_DIR)
