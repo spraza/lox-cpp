@@ -9,7 +9,7 @@ ErrorHandler::ErrorHandler()
 
 void ErrorHandler::report() const {
     for (const auto error : errorList) {
-        std::cout << "[line " + std::to_string(error.line) + "] Error" +
+        std::cout << "[line " + std::to_string(error.line) + "] Error " +
                          error.where + ": " + error.message
                   << std::endl;
     }
